@@ -5,12 +5,31 @@
 		<title>Get Griddy checker</title>
 	</head> 
         <body>
-		<h1>Fortnite item shop "Get Griddy" detector</h1>
-		<div class="griddy-container">
-			<div class="griddy-status-box">
-				
+			
+			<div class="background"></div>
+			<h1>Fortnite item shop "Get Griddy" detector</h1>
+			<div class="griddy-container">
+				<div class="griddy-status-box">
+					<p><b>Get Griddy status: </b></p>
+					<p class="griddy-status-text"><b>CHECKING...</b></p>
+					<div class="buy-griddy-container">
+						<p>Auth code<a href="#"><sup class="code-hint">?</sup></a></p>
+						<input type="text" class="auth-token">
+						<button class="buy-griddy">Buy</button>
+					</div>
+				</div>
 			</div>
-		</div>
+
+			<div class="hint-container">
+				<p>!!Login to epic games account using your browser!!</p>
+				<p>Copy "authorizationCode" property contents (without quotes) from <a href="https://www.epicgames.com/id/api/redirect?clientId=ec684b8c687f479fadea3cb2ad83f5c6&responseType=code">here</a></p>
+				<p>And paste it in the textbox, hit "Buy" if you want to buy it.</p>
+				<p>Item will be bought using undocumented epic games fortnite API. <u><i>I am not responsible for anything going wrong.</i></u></p>
+				<p><b>If API call for transaction fails, no amount will be charged from your account.</b> (i tested this earlier)</p>
+				<p>If transaction succeeds, response should contain something like this:</p>
+				<img src="/transaction.png">
+			</div>
 	</body>
 	<script src="/checkGriddy.js"></script>
+	<script src="/hint.js"></script>
 </html>

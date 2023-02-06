@@ -41,7 +41,8 @@ async function epicAuth(auth)
 
 async function refreshToken()
 {
-    if(!epicSession.hasOwnProperty("refresh_token")) { console.log("Token no longer valid"); process.exit(-1) }
+    if(!epicSession.hasOwnProperty("refresh_token")) { console.log("Token no longer valid"); process.exit(-1); }
+    else { console.log("Token refreshed."); }
 
     try {
         const response = await fetch("https://account-public-service-prod.ol.epicgames.com/account/api/oauth/token", {
@@ -90,20 +91,37 @@ app.use(express.json())
 app.use(express.static('html'))
 app.use(express.static('css'))
 app.use(express.static('js'))
+app.use(express.static('img'))
 
 app.get('/'), (req,res) => {
 	res.sendFile('index.html');
-//	res.sendFile('styles.css');
-//	res.sendFile('checkGriddy.js');
 }
 
+// /css section
 app.get('/styles.css'), (req,res) => {
 	res.sendFile('styles.css');
 }
+// end of /css section
 
+// /js section
 app.get('/checkGriddy.js'), (req, res) => {
 	res.sendFile('checkGriddy.js');
 }
+// end of /js section
+
+// /img section
+app.get('/griddy.png'), (req, res) => {
+	res.sendFile('griddy.png');
+}
+
+app.get('/transaction.png'), (req, res) => {
+	res.sendFile('transaction.png');
+}
+
+app.get('/meowgriddy.gif'), (req, res) => {
+	res.sendFile('meowgriddy.gif');
+}
+// end of /img section
 
 app.get('/isGetGriddyInTheItemShop', getFortniteShopContents, (req, res) => {
     if(cooldown)
@@ -112,8 +130,11 @@ app.get('/isGetGriddyInTheItemShop', getFortniteShopContents, (req, res) => {
         for(const storefront of req.shopContents['storefronts'])
         {
             for(const item of storefront['catalogEntries']) {
-                if(item['devName'].toLowerCase().includes('lunch break') 
-                && !item['devName'].includes(",")) // avoid bundles
+                if (
+                    item['devName'].toLowerCase().includes('get griddy') 
+                    &&
+                    !item['devName'].includes(",") // avoid bundles
+                ) 
                 { req.response = {"isGetGriddyInTheItemShop": true, 
                                   "devName": item['devName'],
                                   "offerId": item['offerId'],
