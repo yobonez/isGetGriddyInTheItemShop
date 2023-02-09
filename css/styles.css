@@ -26,27 +26,6 @@ body {
 	color:gray;
 }
 
-.hint-container {
-	position: absolute;
-	background-color: beige;
-	padding:5px;
-	text-align: center;
-	border-radius: 20px;
-	top:5px;
-
-	transition: opacity .5s;
-
-	opacity: 0;
-}
-
-.hint-container p {
-	margin: 0;
-}
-
-.hint-container a {
-	pointer-events: auto;
-}
-
 h1 {
 	text-align: center;
 }
@@ -59,7 +38,7 @@ h1 {
 	background-image:url("/griddy.png");
 	background-position: center;
 	text-align: center;
-	box-shadow: 0px 1px 10px gray;
+	box-shadow: 0px 1px 20px gray;
 	border-radius: 10px;
 	align-items:center;
 
@@ -70,7 +49,22 @@ h1 {
 	transform: translate(-50%,-50%);
 }
 
-.griddy-status-box {
+.griddy-status-box.title
+{
+	text-align: center;
+	position: relative;
+	height: 36px;
+	top: -36px;
+
+	border-radius: 10px;
+	background-color: white;
+}
+
+.griddy-status-box.title h2 {
+	margin: 0;
+}
+
+.griddy-status-box.status {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -82,17 +76,7 @@ h1 {
 	border-radius: 10px;
 	background: white;
 
-	padding-left:5px;
-	padding-right:5px;
+	padding-left:36px;
+	padding-right:36px;
 }
 
-.buy-griddy-container {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-
-	max-height: 20px;
-
-	pointer-events: none;
-	opacity:0.4;
-}

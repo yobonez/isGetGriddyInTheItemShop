@@ -1,0 +1,91 @@
+.buynow {
+    /* pointer-events: none;
+    opacity: 0.4; */
+}
+
+.buy-griddy-container {
+	display: block;
+	position:absolute;
+	top:50%;
+	left:50%;
+	transform: translate(-50%,-50%);
+
+	background-color: blueviolet;
+
+	border-radius: 10px;
+
+	width:512px;
+	height: 512px;
+	opacity: 0;
+	pointer-events: none;
+
+    transition: opacity 0.5s;
+} 
+
+.buy-griddy-container h2, p {
+	margin: 3px;
+}
+
+/* .buy-griddy-container .introduction {
+
+} */
+
+.buy-griddy-container .session {
+	background-color: rgb(255, 120, 0);
+	border-radius: 10px;
+	padding: 10px;
+}
+
+.buy-griddy-container .session h3, .buy-griddy-container .item h3, .buy-griddy-container .purchase h3, h4 {
+	margin: 0px;
+}
+
+
+.buy-griddy-container .session .session-details{
+	display:flex;
+	align-items: center;
+	justify-content: center;
+}
+
+
+.buy-griddy-container .item {
+    background-color: rgb(255, 167, 0);
+    border-radius: 10px;
+}
+
+.buy-griddy-container .item .item-details{
+    display:block;
+	padding:5px;
+}
+
+.buy-griddy-container .item .item-details div {
+    background-color: rgb(100, 0, 255);
+    border-radius: 10px;
+    margin: 5px;
+	padding: 3px;
+
+	color: white;
+}
+
+.buy-griddy-container .item .item-details p {
+    font-family: monospace;
+    margin: 0;
+}
+
+.buy-griddy-container .purchase {
+	background-color: rgb(255, 187, 0);
+	border-radius: 10px;
+	padding: 4px;
+}
+
+.response-area {
+	background-color: gray;
+	border-radius: 10px;
+	margin: 2px;
+	padding:4px;
+}
+
+textarea {
+	width: 480px;
+	height: 110px;
+}

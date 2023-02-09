@@ -31,7 +31,8 @@ async function epicAuth(auth)
             body: `grant_type=authorization_code&code=${auth}`
         });
         const data = await response.json();
-        epicSession = data;
+        epicSession = await data;
+	    console.log(await epicSession);
     } catch (e) {
         epicSession = e;
     }
@@ -39,9 +40,9 @@ async function epicAuth(auth)
     //next();
 }
 
-async function refreshToken()
+async function refreshToken(refToken)
 {
-    if(!epicSession.hasOwnProperty("refresh_token")) { console.log("Token no longer valid"); process.exit(-1); }
+    if(!await epicSession.hasOwnProperty("refresh_token")) { console.log("Token no longer valid"); console.log("What is wrong???\n" + epicSession); return; }
     else { console.log("Token refreshed."); }
 
     try {
@@ -51,18 +52,20 @@ async function refreshToken()
                 "Content-Type": "application/x-www-form-urlencoded",
                 "Authorization": "Basic ZWM2ODRiOGM2ODdmNDc5ZmFkZWEzY2IyYWQ4M2Y1YzY6ZTFmMzFjMjExZjI4NDEzMTg2MjYyZDM3YTEzZmM4NGQ="
             },
-            body: `grant_type=refresh_token&refresh_token=${epicSession["refresh_token"]}`
+            body: `grant_type=refresh_token&refresh_token=${refToken}`
         });
         const data = await response.json();
-        epicSession = data;
+        epicSession = await data;
+	    console.log("Normal "+ JSON.stringify(epicSession) + " " + epicSession["access_token"] + " " + epicSession["refresh_token"]);
     } catch(e) {
         epicSession = e;
+	    console.log("Err: " + JSON.stringify(epicSession));
     }
 }
 
 const getFortniteShopContents = async function(req,res,next)
 {
-    if(!epicSession.hasOwnProperty("access_token")) { console.log("There was an error authenticating epic games account"); process.exit(-1) }
+    if(!epicSession.hasOwnProperty("access_token")) { console.log("There was an error authenticating epic games account\n"); console.log(epicSession); /*process.exit(-1)*/ }
     if(cooldown) { next(); }
 
     try {
@@ -82,8 +85,8 @@ const getFortniteShopContents = async function(req,res,next)
 }
 
 await epicAuth(epicAuthorization);
-setInterval(async () => { await refreshToken(epicSession["refresh_token"]) } , 3000000);
-setInterval(() => {cooldown = false;}, 300000);
+setInterval(async () => { await refreshToken(epicSession["refresh_token"]) } , 900000);
+setInterval(() => {cooldown = false;}, 600000);
 
 app.use(express.json())
 //app.use(getFortniteShopContents)
@@ -101,11 +104,23 @@ app.get('/'), (req,res) => {
 app.get('/styles.css'), (req,res) => {
 	res.sendFile('styles.css');
 }
+
+app.get('/buy.css'), (req, res) => {
+    res.sendFile('buy.css');
+}
+
+app.get('/hint.css'), (req, res) => {
+    res.sendFile('hint.css');
+}
 // end of /css section
 
 // /js section
 app.get('/checkGriddy.js'), (req, res) => {
 	res.sendFile('checkGriddy.js');
+}
+
+app.get('/buyGriddy.js'), (req, res) => {
+    res.sendFile('buyGriddy.js');
 }
 // end of /js section
 
@@ -121,28 +136,40 @@ app.get('/transaction.png'), (req, res) => {
 app.get('/meowgriddy.gif'), (req, res) => {
 	res.sendFile('meowgriddy.gif');
 }
+
+app.get('/itemname.png'), (req, res) => {
+	res.sendFile('itemname.png');
+}
+
+app.get('/itemhint.png'), (req, res) => {
+	res.sendFile('itemhint.png');
+}
 // end of /img section
 
-app.get('/isGetGriddyInTheItemShop', getFortniteShopContents, (req, res) => {
+app.get('/isGetGriddyInTheItemShop', getFortniteShopContents, async (req, res) => {
     if(cooldown)
     { res.send(lastResponse); }
     else {
-        for(const storefront of req.shopContents['storefronts'])
+        const shopContents = await req.shopContents;
+
+        for(const storefront of shopContents['storefronts'])
         {
             for(const item of storefront['catalogEntries']) {
                 if (
-                    item['devName'].toLowerCase().includes('get griddy') 
+                    item['devName'].toLowerCase().includes('fusion! hah!!') 
                     &&
                     !item['devName'].includes(",") // avoid bundles
                 ) 
-                { req.response = {"isGetGriddyInTheItemShop": true, 
-                                  "devName": item['devName'],
-                                  "offerId": item['offerId'],
-                                  "storefrontName": storefront['name'],
-                                  "finalPrice": item['prices'][0]['finalPrice']};
-                                  lastResponse = req.response;
-                                  cooldown = true;
-                                  break; }
+                { 
+                    req.response = {"isGetGriddyInTheItemShop": true, 
+                                    "devName": item['devName'],
+                                    "offerId": item['offerId'],
+                                    "storefrontName": storefront['name'],
+                                    "finalPrice": item['prices'][0]['finalPrice']};
+                                    lastResponse = req.response;
+                                    cooldown = true;
+                                    break; 
+                }
                 else { 
                     req.response = {"isGetGriddyInTheItemShop": false};
                     lastResponse = req.response;
@@ -158,6 +185,7 @@ app.get('/isGetGriddyInTheItemShop', getFortniteShopContents, (req, res) => {
 app.listen(PORT, async () => {
     console.log(`listening on ${PORT}`)
     console.log("Token: " + await epicSession['access_token']);
+    console.log("Refresh token " + await epicSession['refresh_token']);
 })
 
 //const httpServer = http.Server(app);

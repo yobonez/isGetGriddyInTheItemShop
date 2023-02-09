@@ -2,25 +2,82 @@
 	<head> 
 		<meta charset="utf-8"> 
 		<link rel="stylesheet" href="/styles.css">
-		<title>Get Griddy checker</title>
+		<link rel="stylesheet" href="/buy.css">
+		<link rel="stylesheet" href="/hint.css">
+		<title>Get Griddy status</title>
 	</head> 
         <body>
 			
 			<div class="background"></div>
-			<h1>Fortnite item shop "Get Griddy" detector</h1>
 			<div class="griddy-container">
-				<div class="griddy-status-box">
-					<p><b>Get Griddy status: </b></p>
+				<div class="griddy-status-box title">
+					<h2>Is "Get Griddy" emote in Fortnite's Item Shop?</h2>
+				</div>
+				<div class="griddy-status-box status">
+					<p><b>Status: </b></p>
 					<p class="griddy-status-text"><b>CHECKING...</b></p>
-					<div class="buy-griddy-container">
+					<button class="buynow">I want to buy it RIGHT NOW</button>
+					<!-- <div class="asdfgghgfjfh">
 						<p>Auth code<a href="#"><sup class="code-hint">?</sup></a></p>
 						<input type="text" class="auth-token">
 						<button class="buy-griddy">Buy</button>
+					</div> -->
+				</div>
+				<div class="buy-griddy-container">
+					<div class="introduction">
+						<h2>Buy "Get Griddy"</h2>
+						<p>How to login? <a href="#" class="login-hint"><sup>(hover here, click to pin it)</sup></a></p>
+					</div>
+					<div class="session">
+						<div>
+							<h3>Account session</h3>
+							<label for="auth-code">Auth code: </label>
+							<input type="text" name="auth-code">
+							<button class="login-button">Log in</button>
+						</div>
+						<div class="session-details">
+							<p><b>Your nickname: </b></p>
+							<p class="nickname">(you need to Log in)</p>
+						</div>
+					</div>
+					<div class="item">
+						<div>
+							<h3>Item details</h3>
+							<p>Check if the item name is right! <a href="#" class="name-check-hint"><sup>(how to check?)</sup></a></p>
+						</div>
+						<div class="item-details">
+							<div>
+								<p><b><i>Name: <a href="#" class="name-hint"><sup>(?)</sup></a></i></b></p>
+								<p class="name"></p>
+							</div>
+							<div>
+								<p><b><i>offerId: <a href="#" class="offer-hint"><sup>(?)</sup></a></i></b></p>
+								<p class="offerid"></p>
+							</div>
+						</div>
+					</div>
+					<div class="purchase">
+						<div>
+							<!-- <h3>Purchase</h3> -->
+							<h3>Purchase</h3>
+							<button class="purchasebtn">Buy</button>
+							
+						</div>
+						<div class="response-area">
+							<h4>Response</h4>
+							<textarea readonly ></textarea>
+						</div>
 					</div>
 				</div>
+
 			</div>
 
 			<div class="hint-container">
+				<h1>Hint</h1>
+				<pre class="hint-text"></pre>
+			</div>
+
+			<!-- <div class="hint-container">
 				<p>!!Login to epic games account using your browser!!</p>
 				<p>Copy "authorizationCode" property contents (without quotes) from <a href="https://www.epicgames.com/id/api/redirect?clientId=ec684b8c687f479fadea3cb2ad83f5c6&responseType=code">here</a></p>
 				<p>And paste it in the textbox, hit "Buy" if you want to buy it.</p>
@@ -28,8 +85,9 @@
 				<p><b>If API call for transaction fails, no amount will be charged from your account.</b> (i tested this earlier)</p>
 				<p>If transaction succeeds, response should contain something like this:</p>
 				<img src="/transaction.png">
-			</div>
+			</div> -->
 	</body>
 	<script src="/checkGriddy.js"></script>
+	<script src="/buyGriddy.js"></script>
 	<script src="/hint.js"></script>
 </html>

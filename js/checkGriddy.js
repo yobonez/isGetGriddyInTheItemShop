@@ -1,51 +1,68 @@
 var returnCode = undefined;
+var getGriddyStatus = undefined;
+
 async function getGetGriddyStatus() {
-    const response = await fetch("/isGetGriddyInTheItemShop", { method: "GET" });
-    const data = await response.json();
+    var data = undefined;
+    var response = undefined;
+    
+    response = await fetch("/isGetGriddyInTheItemShop", { method: "GET" });
+    data = await response.json();
 
     returnCode = response.status;
 
-    return data["isGetGriddyInTheItemShop"];
+    return data;
+
+    // try {
+    // } 
+    // catch (e) {
+    //     console.log(e);
+    //     returnCode = response.status;
+    //     return "{}";
+    // }
 }
 
 async function main() {
     const griddyContainer = document.querySelector(".griddy-container");
     const griddyStatusElement = document.querySelector(".griddy-status-text");
-    const isGetGriddy = await getGetGriddyStatus();
 
-    const buyControls = document.querySelector('.buy-griddy-container');
-    const codeHint = document.querySelector(".code-hint sup");
+    getGriddyStatus = await getGetGriddyStatus();
 
-    if(returnCode != 200) { 
+    if(await returnCode != 200) { 
         griddyContainer.style.boxShadow = "0px 1px 10px red";
 
         griddyStatusElement.innerHTML = "Error, refresh the page";
         griddyStatusElement.style.color = "red";
     }
 
-    if(isGetGriddy) {
-        griddyContainer.style.boxShadow = "0px 1px 10px green";
+    const isGetGriddy = await getGriddyStatus["isGetGriddyInTheItemShop"];
 
-        griddyStatusElement.innerHTML = "AVAILABLE (testing)";
+
+    //const buyGriddyItem = document.querySelector(".buy-griddy-container .item");
+    const buyGriddyItemDetails = document.querySelector(".buy-griddy-container .item .item-details");
+    const itemName = await getGriddyStatus["devName"];
+    const offerId = await getGriddyStatus["offerId"];
+
+    const buyGriddyContainerButton = document.querySelector(".buynow");
+
+    
+    if(isGetGriddy) {
+        griddyContainer.style.boxShadow = "0px 1px 20px green";
+        
+        griddyStatusElement.innerHTML = "(NOPE, TESTING) IT IS!!!"; //IT IS!!
         griddyStatusElement.style.color = "green";
 
-        buyControls.style.pointerEvents = "auto";
-        buyControls.style.opacity = 1;
-
-        // codeHint.style.opacity = 1;
-        // codeHint.style.pointerEvents = "auto";
+        buyGriddyItemDetails.querySelector(".name").innerHTML = await itemName;
+        buyGriddyItemDetails.querySelector(".offerid").innerHTML = await offerId;
+        
+        buyGriddyContainerButton.style.pointerEvents = "auto";
+        buyGriddyContainerButton.style.opacity = 1;
     }
     else {
-        griddyContainer.style.boxShadow = "0px 1px 10px darkred";
+        griddyContainer.style.boxShadow = "0px 1px 20px darkred";
 
-        griddyStatusElement.innerHTML = "UNAVAILABLE";
+        griddyStatusElement.innerHTML = "NOPE";
         griddyStatusElement.style.color = "darkred";
 
-        buyControls.style.pointerEvents = "none";
-        buyControls.style.opacity = 0.4;
-
-        // codeHint.style.opacity = 1;
-        // codeHint.style.pointerEvents = "auto";
     }
 }
 

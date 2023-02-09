@@ -1,0 +1,30 @@
+.hint-container {
+	position: absolute;
+	background-color: #cac723;
+
+	top: 50%;
+	left:23%;
+
+	width: 512px;
+	height: auto;
+
+	padding: 5px;
+
+    border-radius: 15px;
+
+    opacity:0;
+	transform: translate(-50%,-50%);
+    transition: opacity 0.1s;
+    text-align: center;
+
+}
+
+pre {
+    white-space:pre-wrap; 
+    word-wrap:break-word;
+}
+
+#itemname {
+    width:70%;
+    height: 70%;
+}
