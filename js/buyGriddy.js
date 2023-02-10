@@ -15,13 +15,17 @@ async function requestEpicSession(authCode) {
     }
 }
 
-async function purchase(bearer_token) {
+async function requestPurchase(bearer_token, accountId, offerId, expectedTotalPrice) {
     try {
         const response = await fetch("/requestPurchase", {
-            
-        })
+            method: "POST",
+            headers: { "Content-Type": "application/json" /*"Authorization": `bearer ${bearer_token}`*/},
+            body: `{"bearerToken": "${bearer_token}", "accountId":"${accountId}", "offerId": "${offerId}", "expectedTotalPrice": ${expectedTotalPrice}}`
+        });
+        const data = await response.json();
+        return data;
     } catch (e) {
-
+        console.log(e);
     }
 }
 
@@ -43,6 +47,8 @@ window.addEventListener("DOMContentLoaded", (e) => {
     const buyGriddyContainerButton = document.querySelector(".buynow");
 
     const loginButton = document.querySelector(".login-button");
+
+    const buyButton = document.querySelector(".purchase .purchasebtn");
 
     buyGriddyContainerButton.addEventListener('click', (e) => {
         if (!buyGriddyButtonState) { showBuyOptions(buyGriddyContainer); }
@@ -83,5 +89,13 @@ window.addEventListener("DOMContentLoaded", (e) => {
             console.log(await session);
         }
     });
+
+    buyButton.addEventListener("click", async (e) => {
+        var purchaseResponse = undefined;
+
+        const responseContainer = document.querySelector(".purchase .response-area textarea");
+
+        purchaseResponse = await requestPurchase(session["access_token"], session["account_id"], getGriddyStatus["offerId"], getGriddyStatus["expectedTotalPrice"]);
+    })
 
 })

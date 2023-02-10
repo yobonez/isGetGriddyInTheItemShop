@@ -61,6 +61,23 @@ async function refreshToken(refToken)
     }
 }
 
+async function requestEpicPurchase(bearer, accId, offId, expTotalPrice){
+    try {
+        const response = await fetch(`https://fortnite-public-service-prod11.ol.epicgames.com/fortnite/api/game/v2/profile/${accId}/client/PurchaseCatalogEntry?profileId=common_core`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `bearer ${bearer}`,
+            },
+            body: `{"offerId": "${offId}","purchaseQuantity": 1,"currency": "MtxCurrency","currencySubType":"","expectedTotalPrice": ${expTotalPrice},"gameContext": ""}`
+        });
+        const data = await response.json();
+        return data;
+    } catch (e) {
+        console.log(e);
+    }
+}
+
 const getFortniteShopContents = async function(req,res,next)
 {
     if(!epicSession.hasOwnProperty("access_token")) { console.log("There was an error authenticating epic games account\n"); console.log(epicSession); /*process.exit(-1)*/ }
@@ -186,6 +203,17 @@ app.post('/requestEpicSession', async (req, res) => {
     const session = await epicAuth(authorizationCode);
 
     res.send(session);
+})
+
+app.post('/requestPurchase', async (req, res) => {
+    let bearerToken = req.body.bearerToken;
+    let accountId = req.body.accountId;
+    let offerId = req.body.offerId;
+    let expectedTotalPrice = req.body.expectedTotalPrice;
+
+    const response = await requestEpicPurchase(bearerToken, accountId, offerId, expectedTotalPrice);
+
+    res.send(response);
 })
 
 app.listen(PORT, async () => {
