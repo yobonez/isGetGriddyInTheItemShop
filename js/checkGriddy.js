@@ -11,14 +11,6 @@ async function getGetGriddyStatus() {
     returnCode = response.status;
 
     return data;
-
-    // try {
-    // } 
-    // catch (e) {
-    //     console.log(e);
-    //     returnCode = response.status;
-    //     return "{}";
-    // }
 }
 
 async function main() {

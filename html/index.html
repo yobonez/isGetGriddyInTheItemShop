@@ -1,6 +1,8 @@
 <html> 
 	<head> 
 		<meta charset="utf-8"> 
+		<!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; media-src 'self' script-src-elem 'self'" /> -->
+
 		<link rel="stylesheet" href="/styles.css">
 		<link rel="stylesheet" href="/buy.css">
 		<link rel="stylesheet" href="/hint.css">
@@ -29,15 +31,15 @@
 						<p>How to login? <a href="#" class="login-hint"><sup>(hover here, click to pin it)</sup></a></p>
 					</div>
 					<div class="session">
-						<div>
-							<h3>Account session</h3>
-							<label for="auth-code">Auth code: </label>
-							<input type="text" name="auth-code">
+						<h3>Account session</h3>
+						<div class="session-auth">
+							<label for="aauth-code">Auth code: </label>
+							<input type="text" name="aauth-code" class="auth-code">
 							<button class="login-button">Log in</button>
 						</div>
 						<div class="session-details">
 							<p><b>Your nickname: </b></p>
-							<p class="nickname">(you need to Log in)</p>
+							<p class="nickname">(You need to log in)</p>
 						</div>
 					</div>
 					<div class="item">

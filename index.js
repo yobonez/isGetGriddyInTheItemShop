@@ -1,9 +1,10 @@
 
 import express, { response } from "express";
+import fetch from "node-fetch";
+
 const app = express();
 //import http from "http";
 const PORT = 2137;
-import fetch from "node-fetch";
 
 const epicAuthorization = process.argv[2];
 if (!epicAuthorization)
@@ -31,10 +32,9 @@ async function epicAuth(auth)
             body: `grant_type=authorization_code&code=${auth}`
         });
         const data = await response.json();
-        epicSession = await data;
-	    console.log(await epicSession);
+        return data;
     } catch (e) {
-        epicSession = e;
+        console.log(e);
     }
 
     //next();
@@ -55,11 +55,9 @@ async function refreshToken(refToken)
             body: `grant_type=refresh_token&refresh_token=${refToken}`
         });
         const data = await response.json();
-        epicSession = await data;
-	    console.log("Normal "+ JSON.stringify(epicSession) + " " + epicSession["access_token"] + " " + epicSession["refresh_token"]);
+        return data;
     } catch(e) {
-        epicSession = e;
-	    console.log("Err: " + JSON.stringify(epicSession));
+        console.log(e);
     }
 }
 
@@ -84,7 +82,7 @@ const getFortniteShopContents = async function(req,res,next)
     next();
 }
 
-await epicAuth(epicAuthorization);
+epicSession = await epicAuth(epicAuthorization);
 setInterval(async () => { await refreshToken(epicSession["refresh_token"]) } , 900000);
 setInterval(() => {cooldown = false;}, 600000);
 
@@ -151,6 +149,7 @@ app.get('/isGetGriddyInTheItemShop', getFortniteShopContents, async (req, res) =
     { res.send(lastResponse); }
     else {
         const shopContents = await req.shopContents;
+        console.log(await shopContents);
 
         for(const storefront of shopContents['storefronts'])
         {
@@ -180,6 +179,13 @@ app.get('/isGetGriddyInTheItemShop', getFortniteShopContents, async (req, res) =
         }
         res.send(req.response);
     }
+})
+
+app.post('/requestEpicSession', async (req, res) => {
+    let authorizationCode = req.body.code;
+    const session = await epicAuth(authorizationCode);
+
+    res.send(session);
 })
 
 app.listen(PORT, async () => {

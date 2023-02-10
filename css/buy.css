@@ -89,3 +89,12 @@ textarea {
 	width: 480px;
 	height: 110px;
 }
+
+.session-auth {
+	display:flex;
+	align-items: center;
+	justify-content: space-between;
+
+	padding-left: 27px;
+	padding-right: 27px;
+}
