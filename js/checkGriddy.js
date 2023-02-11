@@ -1,4 +1,3 @@
-var returnCode = undefined;
 var getGriddyStatus = undefined;
 
 async function getGetGriddyStatus() {
@@ -7,8 +6,6 @@ async function getGetGriddyStatus() {
     
     response = await fetch("/isGetGriddyInTheItemShop", { method: "GET" });
     data = await response.json();
-
-    returnCode = response.status;
 
     return data;
 }
@@ -19,7 +16,7 @@ async function main() {
 
     getGriddyStatus = await getGetGriddyStatus();
 
-    if(await returnCode != 200) { 
+    if(getGriddyStatus.hasOwnProperty("Error")) { 
         griddyContainer.style.boxShadow = "0px 1px 10px red";
 
         griddyStatusElement.innerHTML = "Error, refresh the page";
@@ -40,20 +37,20 @@ async function main() {
     if(isGetGriddy) {
         griddyContainer.style.boxShadow = "0px 1px 20px green";
         
-        griddyStatusElement.innerHTML = "(NOPE, TESTING) IT IS!!!"; //IT IS!!
+        griddyStatusElement.innerHTML = "GO GET IT NOW!"; //IT IS!!
         griddyStatusElement.style.color = "green";
 
         buyGriddyItemDetails.querySelector(".name").innerHTML = await itemName;
         buyGriddyItemDetails.querySelector(".offerid").innerHTML = await offerId;
         
-        buyGriddyContainerButton.style.pointerEvents = "auto";
-        buyGriddyContainerButton.style.opacity = 1;
+        buyGriddyContainerButton.removeAttribute("disabled");
     }
     else {
         griddyContainer.style.boxShadow = "0px 1px 20px darkred";
-
+        
         griddyStatusElement.innerHTML = "NOPE";
         griddyStatusElement.style.color = "darkred";
+        buyGriddyContainerButton.setAttribute("disabled", "");
 
     }
 }

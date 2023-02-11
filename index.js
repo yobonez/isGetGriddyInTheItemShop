@@ -42,7 +42,7 @@ async function epicAuth(auth)
 
 async function refreshToken(refToken)
 {
-    if(!await epicSession.hasOwnProperty("refresh_token")) { console.log("Token no longer valid"); console.log("What is wrong???\n" + epicSession); return; }
+    if(!await epicSession.hasOwnProperty("refresh_token")) { console.log("Token no longer valid"); console.log(epicSession); return; }
     else { console.log("Token refreshed."); }
 
     try {
@@ -168,11 +168,14 @@ app.get('/isGetGriddyInTheItemShop', getFortniteShopContents, async (req, res) =
         const shopContents = await req.shopContents;
         console.log(await shopContents);
 
+        if(!shopContents.hasOwnProperty("storefronts"))
+        { res.send ({"Error": [{"Reason": `Probably DNS EAI_AGAIN error on my side. Just try again.`}]}); }
+
         for(const storefront of shopContents['storefronts'])
         {
             for(const item of storefront['catalogEntries']) {
                 if (
-                    item['devName'].toLowerCase().includes('fusion! hah!!') 
+                    item['devName'].toLowerCase().includes('get griddy') 
                     &&
                     !item['devName'].includes(",") // avoid bundles
                 ) 

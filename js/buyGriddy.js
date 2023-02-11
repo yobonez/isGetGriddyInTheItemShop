@@ -11,7 +11,7 @@ async function requestEpicSession(authCode) {
         const data = await response.json();
         return data;
     } catch (e) {
-        console.log(e);
+        return {"Error": [{"Reason": `Probably DNS EAI_AGAIN error on my side (Error: ${e.code}). Just try again.`},{"errorDetails": e}]};
     }
 }
 
@@ -25,7 +25,7 @@ async function requestPurchase(bearer_token, accountId, offerId, expectedTotalPr
         const data = await response.json();
         return data;
     } catch (e) {
-        console.log(e);
+        return {"Error": [{"Reason": `Probably DNS EAI_AGAIN error on my side (Error: ${e.code}). Just try again.`},{"errorDetails": e}]};
     }
 }
 
@@ -43,12 +43,16 @@ function hideBuyOptions(container){
 
 
 window.addEventListener("DOMContentLoaded", (e) => {
+    const responseArea = document.querySelector(".purchase .response-area");
+    const responseStatus = responseArea.querySelector("h4");
+    const responseContainer = responseArea.querySelector("textarea");
+    const buyButton = document.querySelector(".purchase .purchasebtn");
+
     const buyGriddyContainer = document.querySelector(".buy-griddy-container");
     const buyGriddyContainerButton = document.querySelector(".buynow");
 
     const loginButton = document.querySelector(".login-button");
 
-    const buyButton = document.querySelector(".purchase .purchasebtn");
 
     buyGriddyContainerButton.addEventListener('click', (e) => {
         if (!buyGriddyButtonState) { showBuyOptions(buyGriddyContainer); }
@@ -82,20 +86,41 @@ window.addEventListener("DOMContentLoaded", (e) => {
 
         
         if (session.hasOwnProperty("access_token"))
-        { nickname.innerHTML = session["displayName"]; status.innerHTML = "Success!" }
+        { 
+            nickname.innerHTML = session["displayName"];
+            status.innerHTML = "Success!";
+            responseArea.style.backgroundColor = "green";
+            responseStatus.innerHTML = "[SESSION] Successfully logged in!"
+            responseContainer.innerHTML = "Session details are sensitive, if you want to see them, open inspection tools and type \"session\" in the console.";
+
+            buyButton.removeAttribute("disabled");
+        }
         else {
-            status.innerHTML = "Error (check console)";
+            status.innerHTML = "Error";
             nickname.innerHTML = "(You need to log in)";
-            console.log(await session);
+            responseArea.style.backgroundColor = "red";
+            responseStatus.innerHTML = "[SESSION] Error (try again, my RPi poorly handles DNS resolution)";
+            responseContainer.innerHTML = JSON.stringify(await session, null, 2);
         }
     });
 
     buyButton.addEventListener("click", async (e) => {
         var purchaseResponse = undefined;
 
-        const responseContainer = document.querySelector(".purchase .response-area textarea");
+        const responseContainer = responseArea.querySelector("textarea");
 
         purchaseResponse = await requestPurchase(session["access_token"], session["account_id"], getGriddyStatus["offerId"], getGriddyStatus["expectedTotalPrice"]);
+        responseContainer.innerHTML = JSON.stringify(await purchaseResponse, null, 2);
+
+        if(purchaseResponse.hasOwnProperty("profileChanges")) 
+        { 
+            responseArea.style.backgroundColor = "green"; 
+            responseStatus.innerHTML = "[PURCHASE] Success!";
+        }
+        else {
+            responseArea.style.backgroundColor = "red";
+            responseStatus.innerHTML = "[PURCHASE] Epic API Error";
+        }
     })
 
 })
