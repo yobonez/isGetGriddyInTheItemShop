@@ -16,13 +16,6 @@ async function main() {
 
     getGriddyStatus = await getGetGriddyStatus();
 
-    if(getGriddyStatus.hasOwnProperty("Error")) { 
-        griddyContainer.style.boxShadow = "0px 1px 10px red";
-
-        griddyStatusElement.innerHTML = "Error, refresh the page";
-        griddyStatusElement.style.color = "red";
-    }
-
     const isGetGriddy = await getGriddyStatus["isGetGriddyInTheItemShop"];
 
 
@@ -33,6 +26,13 @@ async function main() {
 
     const buyGriddyContainerButton = document.querySelector(".buynow");
 
+    
+    if(getGriddyStatus.hasOwnProperty("Error")) { 
+        griddyContainer.style.boxShadow = "0px 1px 10px red";
+
+        griddyStatusElement.innerHTML = "Error, refresh the page";
+        griddyStatusElement.style.color = "red";
+    }
     
     if(isGetGriddy) {
         griddyContainer.style.boxShadow = "0px 1px 20px green";
@@ -53,6 +53,7 @@ async function main() {
         buyGriddyContainerButton.setAttribute("disabled", "");
 
     }
+    
 }
 
 main();

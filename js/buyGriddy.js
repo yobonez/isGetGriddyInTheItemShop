@@ -11,7 +11,7 @@ async function requestEpicSession(authCode) {
         const data = await response.json();
         return data;
     } catch (e) {
-        return {"Error": [{"Reason": `Probably DNS EAI_AGAIN error on my side (Error: ${e.code}). Just try again.`},{"errorDetails": e}]};
+        return {"Error": [{"Reason": `Probably DNS EAI_AGAIN error on my side (Error: ${e.code}). Just try again.`},{"errorDetails": e.message}]};
     }
 }
 
@@ -25,7 +25,7 @@ async function requestPurchase(bearer_token, accountId, offerId, expectedTotalPr
         const data = await response.json();
         return data;
     } catch (e) {
-        return {"Error": [{"Reason": `Probably DNS EAI_AGAIN error on my side (Error: ${e.code}). Just try again.`},{"errorDetails": e}]};
+        return {"Error": [{"Reason": `Probably DNS EAI_AGAIN error on my side (Error: ${e.code}). Just try again.`},{"errorDetails": e.message}]};
     }
 }
 
@@ -109,7 +109,7 @@ window.addEventListener("DOMContentLoaded", (e) => {
 
         const responseContainer = responseArea.querySelector("textarea");
 
-        purchaseResponse = await requestPurchase(session["access_token"], session["account_id"], getGriddyStatus["offerId"], getGriddyStatus["expectedTotalPrice"]);
+        purchaseResponse = await requestPurchase(session["access_token"], session["account_id"], getGriddyStatus["offerId"], getGriddyStatus["finalPrice"]);
         responseContainer.innerHTML = JSON.stringify(await purchaseResponse, null, 2);
 
         if(purchaseResponse.hasOwnProperty("profileChanges")) 
