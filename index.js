@@ -32,13 +32,12 @@ async function epicAuth(auth)
             },
             body: `grant_type=authorization_code&code=${auth}`
         });
-        if (!response.ok) { throw new Error(response.statusText) }
+        if (!response.ok) { console.log(response.status); throw new Error(response.statusText) }
 
         const data = await response.json();
         return data;
     } catch (e) {
         console.log(e);
-        //return {"Error": [{"Reason": `Probably DNS EAI_AGAIN error on my side (Error: ${e.code}). Just try again.`},{"errorDetails": e}]};
     }
 
     //next();
@@ -58,7 +57,7 @@ async function refreshToken(refToken)
             },
             body: `grant_type=refresh_token&refresh_token=${refToken}`
         });
-        if (!response.ok) { throw new Error(response.statusText) }
+        if (!response.ok) { console.log(response.status); throw new Error(response.statusText) }
 
         const data = await response.json();
         return data;
@@ -77,13 +76,12 @@ async function requestEpicPurchase(bearer, accId, offId, expTotalPrice){
             },
             body: `{"offerId": "${offId}","purchaseQuantity": 1,"currency": "MtxCurrency","currencySubType":"","expectedTotalPrice": ${expTotalPrice},"gameContext": ""}`
         });
-        if (!response.ok) { throw new Error(response.statusText) }
+        if (!response.ok) { console.log(response.status); throw new Error(response.statusText) }
 
         const data = await response.json();
         return data;
     } catch (e) {
         console.log(e);
-        //return {"Error": [{"Reason": `Probably DNS EAI_AGAIN error on my side (Error: ${e.code}). Just try again.`},{"errorDetails": e}]};
     }
 }
 
@@ -99,21 +97,21 @@ const getFortniteShopContents = async function(req,res,next)
                 "Authorization": "Bearer " + epicSession["access_token"]
             }
         });
-        if (!response.ok) { throw new Error(response.statusText) }
+        if (!response.ok) { console.log(response.status); throw new Error(response.statusText) }
 
         const data = await response.json();
         req.shopContents = data;
     } catch(e) {
+        req.shopContents = e;
         console.log(e);
-        //return {"Error": [{"Reason": `Probably DNS EAI_AGAIN error on my side (Error: ${e.code}). Just try again.`},{"errorDetails": e}]};
     }
 
     next();
 }
 
-epicSession = await pRetry(() => epicAuth(epicAuthorization), {retries: 50});
-setInterval(async () => pRetry(() => refreshToken(epicSession["refresh_token"]), {retries: 50}) , 600000);
-setInterval(() => {cooldown = false;}, 601000);
+epicSession = await pRetry(() => epicAuth(epicAuthorization), {retries: 2137});
+setInterval(async () => pRetry(() => refreshToken(epicSession["refresh_token"]), {retries: 2137}) , 600000);
+setInterval(() => {cooldown = false;}, 900000);
 
 app.use(express.json())
 //app.use(getFortniteShopContents)
@@ -185,7 +183,7 @@ app.get('/isGetGriddyInTheItemShop', getFortniteShopContents, async (req, res) =
             {
                 for(const item of storefront['catalogEntries']) {
                     if (
-                        item['devName'].toLowerCase().includes('boop') 
+                        item['devName'].toLowerCase().includes('get griddy') 
                         &&
                         !item['devName'].includes(",") // avoid bundles
                     ) 
@@ -209,8 +207,8 @@ app.get('/isGetGriddyInTheItemShop', getFortniteShopContents, async (req, res) =
             }
             res.send(req.response);
         } catch (e) {
-            console.log(JSON.stringify(shopContents));
-            res.send ({"Error": [{"Reason": `Probably DNS EAI_AGAIN error on my side (Error: ${e.code}). Just try again.`},{"errorDetails": e, "test": shopContents}]});
+            console.log(req.shopContents);
+            res.send ({"Error": req.shopContents, "Details": req.shopContents.message});
         }
     }
 })
@@ -218,7 +216,7 @@ app.get('/isGetGriddyInTheItemShop', getFortniteShopContents, async (req, res) =
 app.post('/requestEpicSession', async (req, res) => {
     let session = undefined;
     let authorizationCode = req.body.code;
-    session = await pRetry(() => epicAuth(authorizationCode), {retries: 50});
+    session = await pRetry(() => epicAuth(authorizationCode), {retries: 2137});
 
     res.send(session);
 })
@@ -231,7 +229,7 @@ app.post('/requestPurchase', async (req, res) => {
     let offerId = req.body.offerId;
     let expectedTotalPrice = req.body.expectedTotalPrice;
 
-    response = await pRetry(() => requestEpicPurchase(bearerToken, accountId, offerId, expectedTotalPrice), {retries: 50});
+    response = await pRetry(() => requestEpicPurchase(bearerToken, accountId, offerId, expectedTotalPrice), {retries: 2137});
 
     res.send(response);
 })

@@ -11,7 +11,7 @@ async function requestEpicSession(authCode) {
         const data = await response.json();
         return data;
     } catch (e) {
-        return {"Error": [{"Reason": `Probably DNS EAI_AGAIN error on my side (Error: ${e.code}). Just try again.`},{"errorDetails": e.message}]};
+        return {"Error": [{"Action":"Just try again","Reason": `Internal server error (Error: ${e.code})`},{"errorDetails": e.message}]};
     }
 }
 
@@ -25,7 +25,7 @@ async function requestPurchase(bearer_token, accountId, offerId, expectedTotalPr
         const data = await response.json();
         return data;
     } catch (e) {
-        return {"Error": [{"Reason": `Probably DNS EAI_AGAIN error on my side (Error: ${e.code}). Just try again.`},{"errorDetails": e.message}]};
+        return {"Error": [{"Action":"Just try again","Reason": `Internal server error (Error: ${e.code})`},{"errorDetails": e.message}]};
     }
 }
 
@@ -108,6 +108,9 @@ window.addEventListener("DOMContentLoaded", (e) => {
         var purchaseResponse = undefined;
 
         const responseContainer = responseArea.querySelector("textarea");
+        responseArea.style.backgroundColor = "gray"; 
+        responseStatus.innerHTML = "[PURCHASE] Requesting...";
+        
 
         purchaseResponse = await requestPurchase(session["access_token"], session["account_id"], getGriddyStatus["offerId"], getGriddyStatus["finalPrice"]);
         responseContainer.innerHTML = JSON.stringify(await purchaseResponse, null, 2);
@@ -119,7 +122,7 @@ window.addEventListener("DOMContentLoaded", (e) => {
         }
         else {
             responseArea.style.backgroundColor = "red";
-            responseStatus.innerHTML = "[PURCHASE] Epic API Error";
+            responseStatus.innerHTML = "[PURCHASE] Error";
         }
     })
 
